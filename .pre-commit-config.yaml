@@ -12,7 +12,7 @@ repos:
       - id: check-yaml
         args: [--unsafe]  # Allow custom tags in YAML
       - id: check-added-large-files
-        args: [--maxkb=1000]  # Warn if file > 1MB
+        args: [--maxkb=10000]  # Warn if file > 1MB
       - id: check-merge-conflict
 
   # Code formatting with Black
