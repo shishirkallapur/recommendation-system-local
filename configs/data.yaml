@@ -1,0 +1,26 @@
+# Data ingestion and preprocessing configuration
+
+source:
+  name: "movielens-100k"
+  url: "https://files.grouplens.org/datasets/movielens/ml-100k.zip"
+
+paths:
+  raw: "data/raw"
+  processed: "data/processed"
+  features: "data/features"
+
+preprocessing:
+  # Treat ratings >= this as positive interactions (implicit feedback)
+  implicit_threshold: 4
+  # Filter out users/items with fewer interactions than these
+  min_user_interactions: 5
+  min_item_interactions: 10
+
+splitting:
+  # Global time-based split (all users share same cutoffs)
+  method: "global_time"
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  # Random seed for reproducibility
+  seed: 42

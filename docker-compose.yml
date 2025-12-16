@@ -1,0 +1,95 @@
+version: "3.8"
+
+services:
+  # ==========================================================================
+  # MLflow: Experiment tracking and model registry
+  # ==========================================================================
+  mlflow:
+    image: python:3.9-slim
+    container_name: mlflow-server
+    working_dir: /mlflow
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+      - ./mlflow.db:/mlflow/mlflow.db
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=sqlite:///mlflow/mlflow.db
+    command: >
+      bash -c "
+        pip install mlflow>=2.0 --quiet &&
+        mlflow server
+          --backend-store-uri sqlite:///mlflow/mlflow.db
+          --default-artifact-root /mlflow/mlruns
+          --host 0.0.0.0
+          --port 5000
+      "
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==========================================================================
+  # API: FastAPI recommendation service
+  # ==========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recommendation-api
+    volumes:
+      # Mount models directory (so we can update without rebuilding)
+      - ./models:/app/models
+      # Mount configs (for runtime configuration)
+      - ./configs:/app/configs
+      # Mount logs directory (for request logging)
+      - ./data/logs:/app/data/logs
+    ports:
+      - "8000:8000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - ENVIRONMENT=development
+    depends_on:
+      - mlflow
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # ==========================================================================
+  # Streamlit: Monitoring dashboard (optional, for Phase 5)
+  # ==========================================================================
+  dashboard:
+    image: python:3.9-slim
+    container_name: monitoring-dashboard
+    working_dir: /app
+    volumes:
+      - ./src/monitoring:/app/src/monitoring
+      - ./data/logs:/app/data/logs
+      - ./configs:/app/configs
+    ports:
+      - "8501:8501"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    command: >
+      bash -c "
+        pip install streamlit pandas pyyaml mlflow --quiet &&
+        streamlit run src/monitoring/dashboard.py
+          --server.host 0.0.0.0
+          --server.port 8501
+      "
+    depends_on:
+      - api
+    profiles:
+      - monitoring  # Only starts with: docker-compose --profile monitoring up
+
+# =============================================================================
+# Volumes (named volumes for data persistence)
+# =============================================================================
+volumes:
+  mlruns:
+  logs:

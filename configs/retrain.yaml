@@ -1,0 +1,29 @@
+# Retraining pipeline configuration
+
+schedule:
+  # "manual" or cron expression like "0 2 * * *" (daily at 2am)
+  mode: "manual"
+
+data:
+  # Where to read new interactions from
+  new_interactions_source: "data/logs/requests.db"
+  # How to combine with existing training data
+  merge_strategy: "append"
+
+promotion:
+  # Primary metric for comparison
+  primary_metric: "ndcg@10"
+  # New model must be at least this much better (relative)
+  min_relative_improvement: 0.01
+  # No metric should regress more than this
+  max_regression_any_metric: 0.05
+  # Automatically promote if criteria met
+  auto_promote: true
+
+deployment:
+  # Restart API after promotion
+  restart_api: true
+  # Method: "docker_signal" or "file_watch"
+  method: "file_watch"
+  # Path to write trigger file
+  trigger_file: "models/production/.reload"
