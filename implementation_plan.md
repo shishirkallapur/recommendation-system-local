@@ -36,10 +36,10 @@ This document breaks down each phase into granular steps. Use this to track prog
 
 | Step | Task | Files Created | Status |
 |------|------|---------------|--------|
-| 2.1 | Create config loader utility | `src/config.py` | ⬜ |
-| 2.2 | Implement data download | `src/data/download.py` | ⬜ |
-| 2.3 | Implement preprocessing (implicit conversion, filtering) | `src/data/preprocess.py` | ⬜ |
-| 2.4 | Implement time-based splitting | `src/data/split.py` | ⬜ |
+| 2.1 | Create config loader utility | `src/config.py` | ✅ |
+| 2.2 | Implement data download | `src/data/download.py` | ✅ |
+| 2.3 | Implement preprocessing (implicit conversion, filtering) | `src/data/preprocess.py` | ✅ |
+| 2.4 | Implement time-based splitting | `src/data/split.py` | ✅ |
 | 2.5 | Implement feature building (genre encoding, popularity) | `src/features/build.py` | ⬜ |
 | 2.6 | Create ID mapping utilities | `src/data/mappings.py` | ⬜ |
 | 2.7 | Write unit tests for data pipeline | `tests/test_data.py` | ⬜ |
