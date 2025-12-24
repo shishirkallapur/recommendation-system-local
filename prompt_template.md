@@ -17,10 +17,11 @@ I will attach the following files to this message:
 
 ### Current Status
 
-**Currently on:** Phase 2, Step 2.1
+**Currently on:** Phase 3, Step 3.1
 
 **Completed steps:**
 - Phase 1 : All steps
+- Phase 2 : All steps
 
 **Files already created:**
 - `pyproject.toml`
@@ -34,8 +35,8 @@ I will attach the following files to this message:
 - `configs/monitoring.yaml`
 - `configs/retrain.yaml`
 - `Makefile`
-
-**Next step to implement:** Step 2.1 — Create config loader utility
+- All the files created during Phase 1 and 2.
+**Next step to implement:** Step 3.1 — Create abstract base recommender class
 
 ### How I Want to Work
 
@@ -49,7 +50,9 @@ I will attach the following files to this message:
    - How it connects to other parts
    - Key decisions and trade-offs
 
-4. **Verification:** After each step, provide commands to verify the implementation works.
+4. **Verification:** After each step, provide commands to verify the implementation works and provide git commands to push each step once development is finished.
+
+5. **Sanity Check:** When working on a specific step or a file and if there is a need to call or refer the code developed in previous Phases, DO NOT assume the structure or names of files/functions. Instead ask for the specific file to be uploaded for context.
 
 ### Technical Setup
 
