@@ -59,8 +59,8 @@ This document breaks down each phase into granular steps. Use this to track prog
 
 | Step | Task | Files Created | Status |
 |------|------|---------------|--------|
-| 3.1 | Create abstract base recommender class | `src/models/base.py` | ⬜ |
-| 3.2 | Implement item-item similarity model | `src/models/item_item.py` | ⬜ |
+| 3.1 | Create abstract base recommender class | `src/models/base.py` | ✅ |
+| 3.2 | Implement item-item similarity model | `src/models/item_item.py` | ✅ |
 | 3.3 | Implement ALS matrix factorization model | `src/models/als.py` | ⬜ |
 | 3.4 | Implement FAISS index builder | `src/models/index.py` | ⬜ |
 | 3.5 | Implement ranking metrics (precision, recall, NDCG, MRR) | `src/training/evaluate.py` | ⬜ |
