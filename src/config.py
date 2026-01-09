@@ -2,15 +2,18 @@
 It loads the configuration from the YAML files in the configs directory.
 Config are validated using Pydantic models and cached after first load for reuse.
 Usage:
-    from src.config import get_data_config
+    from src.config import get_data_config, get_training_config
     data_config = get_data_config()
     print(data_config.raw_dir) #  path to raw data directory
+
+    training_config = get_training_config()
+    print(training_config.models.als.factors)  # 64
 """
 
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import yaml
 from pydantic import BaseModel, Field, model_validator
@@ -121,6 +124,92 @@ class DataConfig(BaseModel):
 
 
 # =============================================================================
+# Training Config Models (matching training.yaml structure)
+# =============================================================================
+
+
+class MLflowConfig(BaseModel):
+    """MLflow configuration."""
+
+    experiment_name: str = Field(description="Name of the MLflow experiment")
+    tracking_uri: Optional[str] = Field(
+        default=None, description="MLflow tracking URI (null = local)"
+    )
+
+
+class ItemItemModelConfig(BaseModel):
+    """Item-Item model configuration."""
+
+    enabled: bool = Field(description="Whether to train this model")
+    k_neighbors: int = Field(ge=1, description="Number of neighbors to consider")
+    min_similarity: float = Field(
+        ge=0.0, le=1.0, description="Minimum similarity threshold"
+    )
+
+
+class ALSModelConfig(BaseModel):
+    """ALS model configuration."""
+
+    enabled: bool = Field(description="Whether to train this model")
+    factors: int = Field(ge=1, description="Number of latent factors")
+    regularization: float = Field(ge=0.0, description="L2 regularization")
+    iterations: int = Field(ge=1, description="Number of ALS iterations")
+    alpha: float = Field(ge=0.0, description="Confidence scaling factor")
+
+
+class ModelsConfig(BaseModel):
+    """Configuration for all models."""
+
+    item_item: ItemItemModelConfig
+    als: ALSModelConfig
+
+
+class EvaluationConfig(BaseModel):
+    """Evaluation configuration."""
+
+    k_values: list[int] = Field(description="K values for metrics")
+    primary_metric: str = Field(description="Primary metric for model comparison")
+
+
+class PromotionConfig(BaseModel):
+    """Model promotion configuration."""
+
+    min_improvement: float = Field(ge=0.0, description="Minimum relative improvement")
+    max_regression: float = Field(ge=0.0, description="Maximum allowed regression")
+    auto_promote: bool = Field(description="Whether to auto-promote if criteria met")
+
+
+class OutputConfig(BaseModel):
+    """Output paths configuration."""
+
+    models_dir: str = Field(description="Directory for model artifacts")
+    production_dir: str = Field(description="Subdirectory for production model")
+
+
+class TrainingConfig(BaseModel):
+    """
+    Root configuration for model training.
+
+    Mirrors the structure of configs/training.yaml.
+    """
+
+    mlflow: MLflowConfig
+    models: ModelsConfig
+    evaluation: EvaluationConfig
+    promotion: PromotionConfig
+    output: OutputConfig
+    random_seed: int = Field(description="Random seed for reproducibility")
+
+    def get_models_path(self) -> Path:
+        """Get absolute path to models directory."""
+        return get_project_root() / self.output.models_dir
+
+    def get_production_path(self) -> Path:
+        """Get absolute path to production model directory."""
+        return get_project_root() / self.output.models_dir / self.output.production_dir
+
+
+# =============================================================================
 # Config Loading Functions
 # =============================================================================
 
@@ -150,6 +239,13 @@ def get_data_config() -> DataConfig:
     return DataConfig(**raw_config)
 
 
+@lru_cache(maxsize=1)
+def get_training_config() -> TrainingConfig:
+    """Load and validate training configuration."""
+    raw_config = _load_yaml("training.yaml")
+    return TrainingConfig(**raw_config)
+
+
 def clear_config_cache() -> None:
     """Clear cached configurations.
 
@@ -157,7 +253,7 @@ def clear_config_cache() -> None:
     Useful for testing.
     """
     get_data_config.cache_clear()
-    # Add other config cache clears here as we implement them
+    get_training_config.cache_clear()
 
 
 # =============================================================================
@@ -173,6 +269,7 @@ if __name__ == "__main__":
     # List of configs to validate (add more as we implement them)
     configs_to_check = [
         ("data.yaml", get_data_config),
+        ("training.yaml", get_training_config),
     ]
 
     all_valid = True
@@ -181,7 +278,10 @@ if __name__ == "__main__":
             config = loader()
             print(f"✓ {name}: Valid")
             # Print a sample value to confirm it loaded correctly
-            print(f"  └─ Dataset: {config.source.name}")
+            if hasattr(config, "source"):
+                print(f"  └─ Dataset: {config.source.name}")
+            elif hasattr(config, "mlflow"):
+                print(f"  └─ Experiment: {config.mlflow.experiment_name}")
         except FileNotFoundError:
             print(f"✗ {name}: File not found")
             all_valid = False

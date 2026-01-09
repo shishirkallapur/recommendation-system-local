@@ -1,0 +1,5 @@
+{
+  "name": "ItemItemRecommender",
+  "k_neighbors": 50,
+  "min_similarity": 0.0
+}

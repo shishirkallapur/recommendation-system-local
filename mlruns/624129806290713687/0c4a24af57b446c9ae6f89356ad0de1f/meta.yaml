@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/shishirkallapur/Desktop/practise_llms/recommendation-system-local/mlruns/624129806290713687/0c4a24af57b446c9ae6f89356ad0de1f/artifacts
+end_time: 1767907502220
+entry_point_name: ''
+experiment_id: '624129806290713687'
+lifecycle_stage: active
+run_id: 0c4a24af57b446c9ae6f89356ad0de1f
+run_name: als
+run_uuid: 0c4a24af57b446c9ae6f89356ad0de1f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1767907501793
+status: 3
+tags: []
+user_id: shishirkallapur

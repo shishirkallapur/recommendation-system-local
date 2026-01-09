@@ -1,0 +1,8 @@
+{
+  "name": "ALSRecommender",
+  "factors": 64,
+  "regularization": 0.01,
+  "iterations": 15,
+  "alpha": 1.0,
+  "random_state": 42
+}

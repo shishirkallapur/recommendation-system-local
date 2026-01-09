@@ -61,11 +61,11 @@ This document breaks down each phase into granular steps. Use this to track prog
 |------|------|---------------|--------|
 | 3.1 | Create abstract base recommender class | `src/models/base.py` | ✅ |
 | 3.2 | Implement item-item similarity model | `src/models/item_item.py` | ✅ |
-| 3.3 | Implement ALS matrix factorization model | `src/models/als.py` | ⬜ |
-| 3.4 | Implement FAISS index builder | `src/models/index.py` | ⬜ |
-| 3.5 | Implement ranking metrics (precision, recall, NDCG, MRR) | `src/training/evaluate.py` | ⬜ |
-| 3.6 | Implement MLflow utilities (logging, registry) | `src/training/mlflow_utils.py` | ⬜ |
-| 3.7 | Implement training orchestrator | `src/training/train.py` | ⬜ |
+| 3.3 | Implement ALS matrix factorization model | `src/models/als.py` | ✅ |
+| 3.4 | Implement FAISS index builder | `src/models/index.py` | ✅ |
+| 3.5 | Implement ranking metrics (precision, recall, NDCG, MRR) | `src/training/evaluate.py` | ✅ |
+| 3.6 | Implement MLflow utilities (logging, registry) | `src/training/mlflow_utils.py` | ✅ |
+| 3.7 | Implement training orchestrator | `src/training/train.py` | ✅ |
 | 3.8 | Implement model export (save production artifacts) | `src/training/export.py` | ⬜ |
 | 3.9 | Write unit tests for models and evaluation | `tests/test_models.py`, `tests/test_evaluation.py` | ⬜ |
 | 3.10 | Verification: train and register model | Run `make train`, verify MLflow UI | ⬜ |

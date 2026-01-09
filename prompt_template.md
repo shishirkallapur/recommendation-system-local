@@ -17,11 +17,12 @@ I will attach the following files to this message:
 
 ### Current Status
 
-**Currently on:** Phase 3, Step 3.1
+**Currently on:** Phase 3, Step 3.8
 
 **Completed steps:**
 - Phase 1 : All steps
 - Phase 2 : All steps
+- Phase 3 : Steps 3.1 - 3.7
 
 **Files already created:**
 - `pyproject.toml`
@@ -36,7 +37,7 @@ I will attach the following files to this message:
 - `configs/retrain.yaml`
 - `Makefile`
 - All the files created during Phase 1 and 2.
-**Next step to implement:** Step 3.1 — Create abstract base recommender class
+**Next step to implement:** Step 3.8 — Create abstract base recommender class
 
 ### How I Want to Work
 

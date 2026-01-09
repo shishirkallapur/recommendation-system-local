@@ -1,0 +1,33 @@
+# Model training configuration
+
+mlflow:
+  experiment_name: "movie-recommender"
+  tracking_uri: null  # null = use default local ./mlruns
+
+models:
+  item_item:
+    enabled: true
+    k_neighbors: 50
+    min_similarity: 0.0
+
+  als:
+    enabled: true
+    factors: 64
+    regularization: 0.01
+    iterations: 15
+    alpha: 1.0
+
+evaluation:
+  k_values: [5, 10, 20]
+  primary_metric: "ndcg@10"
+
+promotion:
+  min_improvement: 0.01
+  max_regression: 0.05
+  auto_promote: true
+
+output:
+  models_dir: "models"
+  production_dir: "production"
+
+random_seed: 42
