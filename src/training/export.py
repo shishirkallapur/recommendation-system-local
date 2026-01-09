@@ -352,17 +352,34 @@ if __name__ == "__main__":
                 print("\n" + "=" * 50)
                 print("Production Model Found")
                 print("=" * 50)
-                print(f"Version: {metadata.get('version')}")
-                print(f"Model type: {metadata.get('model_type')}")
-                print(f"Created at: {metadata.get('created_at')}")
-                print("\nDimensions:")
+                print(f"Version: {metadata.get('version', 'N/A')}")
+                print(f"Model type: {metadata.get('model_type', 'N/A')}")
+                print(f"Created at: {metadata.get('created_at', 'N/A')}")
+
                 dims = metadata.get("dimensions", {})
-                print(f"  Users: {dims.get('n_users'):,}")
-                print(f"  Items: {dims.get('n_items'):,}")
-                print(f"  Embedding dim: {dims.get('embedding_dim')}")
-                print("\nMetrics:")
-                for metric, value in metadata.get("metrics", {}).items():
-                    print(f"  {metric}: {value:.4f}")
+                if dims:
+                    print("\nDimensions:")
+                    n_users = dims.get("n_users")
+                    n_items = dims.get("n_items")
+                    emb_dim = dims.get("embedding_dim")
+                    print(f"  Users: {n_users:,}" if n_users else "  Users: N/A")
+                    print(f"  Items: {n_items:,}" if n_items else "  Items: N/A")
+                    print(
+                        f"  Embedding dim: {emb_dim}"
+                        if emb_dim
+                        else "  Embedding dim: N/A"
+                    )
+
+                metrics = metadata.get("metrics", {})
+                if metrics:
+                    print("\nMetrics:")
+                    for metric, value in metrics.items():
+                        if isinstance(value, float):
+                            print(f"  {metric}: {value:.4f}")
+                        else:
+                            print(f"  {metric}: {value}")
+                else:
+                    print("\nMetrics: None recorded")
             else:
                 print("Production model exists but metadata could not be loaded.")
         else:
