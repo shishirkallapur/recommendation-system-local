@@ -66,9 +66,9 @@ This document breaks down each phase into granular steps. Use this to track prog
 | 3.5 | Implement ranking metrics (precision, recall, NDCG, MRR) | `src/training/evaluate.py` | ✅ |
 | 3.6 | Implement MLflow utilities (logging, registry) | `src/training/mlflow_utils.py` | ✅ |
 | 3.7 | Implement training orchestrator | `src/training/train.py` | ✅ |
-| 3.8 | Implement model export (save production artifacts) | `src/training/export.py` | ⬜ |
-| 3.9 | Write unit tests for models and evaluation | `tests/test_models.py`, `tests/test_evaluation.py` | ⬜ |
-| 3.10 | Verification: train and register model | Run `make train`, verify MLflow UI | ⬜ |
+| 3.8 | Implement model export (save production artifacts) | `src/training/export.py` | ✅ |
+| 3.9 | Write unit tests for models and evaluation | `tests/test_models.py`, `tests/test_evaluation.py` | ✅ |
+| 3.10 | Verification: train and register model | Run `make train`, verify MLflow UI | ✅ |
 
 **Outputs:**
 - MLflow experiment with logged runs
@@ -82,8 +82,8 @@ This document breaks down each phase into granular steps. Use this to track prog
 
 | Step | Task | Files Created | Status |
 |------|------|---------------|--------|
-| 4.1 | Define Pydantic schemas (request/response models) | `src/api/schemas.py` | ⬜ |
-| 4.2 | Implement model loader (load artifacts at startup) | `src/api/model_loader.py` | ⬜ |
+| 4.1 | Define Pydantic schemas (request/response models) | `src/api/schemas.py` | ✅ |
+| 4.2 | Implement model loader (load artifacts at startup) | `src/api/model_loader.py` | ✅ |
 | 4.3 | Implement recommendation engine (scoring, filtering) | `src/api/recommender.py` | ⬜ |
 | 4.4 | Implement fallback handler (cold-start logic) | `src/api/fallback.py` | ⬜ |
 | 4.5 | Implement request logger (SQLite async writes) | `src/api/logger.py` | ⬜ |

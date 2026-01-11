@@ -8,6 +8,7 @@ paths:
   raw: "data/raw"
   processed: "data/processed"
   features: "data/features"
+  logs: "data/logs"
 
 preprocessing:
   # Treat ratings >= this as positive interactions (implicit feedback)

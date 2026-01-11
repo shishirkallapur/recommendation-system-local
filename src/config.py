@@ -58,6 +58,7 @@ class PathsConfig(BaseModel):
     raw: str = Field(description="Directory for raw downloaded data")
     processed: str = Field(description="Directory for processed data")
     features: str = Field(description="Directory for computed features")
+    logs: str = Field(default="data/logs", description="Directory for request logs")
 
 
 class PreprocessingConfig(BaseModel):
@@ -121,6 +122,10 @@ class DataConfig(BaseModel):
     def get_features_path(self) -> Path:
         """Get absolute path to features directory."""
         return get_project_root() / self.paths.features
+
+    def get_logs_path(self) -> Path:
+        """Get absolute path to logs directory."""
+        return get_project_root() / self.paths.logs
 
 
 # =============================================================================
