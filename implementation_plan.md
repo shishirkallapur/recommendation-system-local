@@ -84,12 +84,12 @@ This document breaks down each phase into granular steps. Use this to track prog
 |------|------|---------------|--------|
 | 4.1 | Define Pydantic schemas (request/response models) | `src/api/schemas.py` | ✅ |
 | 4.2 | Implement model loader (load artifacts at startup) | `src/api/model_loader.py` | ✅ |
-| 4.3 | Implement recommendation engine (scoring, filtering) | `src/api/recommender.py` | ⬜ |
-| 4.4 | Implement fallback handler (cold-start logic) | `src/api/fallback.py` | ⬜ |
-| 4.5 | Implement request logger (SQLite async writes) | `src/api/logger.py` | ⬜ |
-| 4.6 | Create FastAPI app with all endpoints | `src/api/main.py` | ⬜ |
-| 4.7 | Write API tests | `tests/test_api.py` | ⬜ |
-| 4.8 | Verification: test all endpoints | Run `make serve`, test with curl/httpx | ⬜ |
+| 4.3 | Implement recommendation engine (scoring, filtering) | `src/api/recommender.py` | ✅ |
+| 4.4 | Implement fallback handler (cold-start logic) | `src/api/fallback.py` | ✅ |
+| 4.5 | Implement request logger (SQLite async writes) | `src/api/logger.py` | ✅ |
+| 4.6 | Create FastAPI app with all endpoints | `src/api/main.py` | ✅ |
+| 4.7 | Write API tests | `tests/test_api.py` | ✅ |
+| 4.8 | Verification: test all endpoints | Run `make serve`, test with curl/httpx | ✅ |
 
 **Endpoints:**
 - `GET /health` — Health check
@@ -99,20 +99,45 @@ This document breaks down each phase into granular steps. Use this to track prog
 
 ---
 
-## Phase 5: Monitoring & Retraining
+## Phase 5: User-Facing Frontend
+
+**Goal:** Create a Streamlit-based web interface for users to interact with the recommendation system.
+
+| Step | Task | Files Created | Status |
+|------|------|---------------|--------|
+| 5.1 | Create frontend directory structure | `src/frontend/__init__.py` | ⬜ |
+| 5.2 | Implement API client utilities | `src/frontend/api_client.py` | ⬜ |
+| 5.3 | Implement personalized recommendations page | `src/frontend/pages/personalized.py` | ⬜ |
+| 5.4 | Implement similar movies page | `src/frontend/pages/similar.py` | ⬜ |
+| 5.5 | Implement popular movies page | `src/frontend/pages/popular.py` | ⬜ |
+| 5.6 | Implement about/status page | `src/frontend/pages/about.py` | ⬜ |
+| 5.7 | Create main Streamlit app with navigation | `src/frontend/app.py` | ⬜ |
+| 5.8 | Add styling and UI polish | CSS customizations, loading states | ⬜ |
+| 5.9 | Write frontend tests | `tests/test_frontend.py` | ⬜ |
+| 5.10 | Verification: end-to-end user flow | Test all pages manually | ⬜ |
+
+**Pages:**
+- **Personalized** — Enter user ID, get recommendations
+- **Find Similar** — Select a movie, find similar ones
+- **Popular** — Browse popular movies with genre filter
+- **About** — System status, how it works
+
+---
+
+## Phase 6: Monitoring & Retraining
 
 **Goal:** Implement KPI computation, replay evaluation, dashboard, retraining pipeline.
 
 | Step | Task | Files Created | Status |
 |------|------|---------------|--------|
-| 5.1 | Implement KPI computation (latency, traffic, coverage) | `src/monitoring/kpis.py` | ⬜ |
-| 5.2 | Implement replay evaluation (offline metrics on logs) | `src/monitoring/replay_eval.py` | ⬜ |
-| 5.3 | Implement Streamlit dashboard | `src/monitoring/dashboard.py` | ⬜ |
-| 5.4 | Implement data merge for retraining | `src/pipeline/data_merge.py` | ⬜ |
-| 5.5 | Implement promotion logic | `src/pipeline/promote.py` | ⬜ |
-| 5.6 | Implement retraining orchestrator | `src/pipeline/retrain.py` | ⬜ |
-| 5.7 | Write tests for monitoring and pipeline | `tests/test_monitoring.py`, `tests/test_pipeline.py` | ⬜ |
-| 5.8 | Verification: full retraining cycle | Run `make retrain`, verify promotion | ⬜ |
+| 6.1 | Implement KPI computation (latency, traffic, coverage) | `src/monitoring/kpis.py` | ✅ |
+| 6.2 | Implement replay evaluation (offline metrics on logs) | `src/monitoring/replay_eval.py` | ✅ |
+| 6.3 | Implement Streamlit monitoring dashboard | `src/monitoring/dashboard.py` | ⬜ |
+| 6.4 | Implement data merge for retraining | `src/pipeline/data_merge.py` | ⬜ |
+| 6.5 | Implement promotion logic | `src/pipeline/promote.py` | ⬜ |
+| 6.6 | Implement retraining orchestrator | `src/pipeline/retrain.py` | ⬜ |
+| 6.7 | Write tests for monitoring and pipeline | `tests/test_monitoring.py`, `tests/test_pipeline.py` | ⬜ |
+| 6.8 | Verification: full retraining cycle | Run `make retrain`, verify promotion | ⬜ |
 
 **Outputs:**
 - `data/logs/reports/` — KPI reports
@@ -121,18 +146,18 @@ This document breaks down each phase into granular steps. Use this to track prog
 
 ---
 
-## Phase 6: CI/CD
+## Phase 7: CI/CD
 
 **Goal:** Implement pre-commit hooks, GitHub Actions, finalize tests.
 
 | Step | Task | Files Created | Status |
 |------|------|---------------|--------|
-| 6.1 | Configure pre-commit hooks | `.pre-commit-config.yaml` (if not done in 1.7) | ⬜ |
-| 6.2 | Create GitHub Actions CI workflow | `.github/workflows/ci.yml` | ⬜ |
-| 6.3 | Ensure all tests pass | Run `make check` | ⬜ |
-| 6.4 | Create GitHub Actions Docker build workflow | `.github/workflows/docker.yml` | ⬜ |
-| 6.5 | Final documentation | Update `README.md` with usage instructions | ⬜ |
-| 6.6 | Verification: push to GitHub, verify Actions pass | Push code, check Actions tab | ⬜ |
+| 7.1 | Configure pre-commit hooks | `.pre-commit-config.yaml` (if not done in 1.7) | ⬜ |
+| 7.2 | Create GitHub Actions CI workflow | `.github/workflows/ci.yml` | ⬜ |
+| 7.3 | Ensure all tests pass | Run `make check` | ⬜ |
+| 7.4 | Create GitHub Actions Docker build workflow | `.github/workflows/docker.yml` | ⬜ |
+| 7.5 | Final documentation | Update `README.md` with usage instructions | ⬜ |
+| 7.6 | Verification: push to GitHub, verify Actions pass | Push code, check Actions tab | ⬜ |
 
 **Outputs:**
 - Pre-commit hooks running on every commit
@@ -150,6 +175,33 @@ This document breaks down each phase into granular steps. Use this to track prog
 | `src/models/` | `base.py`, `item_item.py`, `als.py`, `index.py` | 3 |
 | `src/training/` | `train.py`, `evaluate.py`, `mlflow_utils.py`, `export.py` | 3 |
 | `src/api/` | `main.py`, `schemas.py`, `model_loader.py`, `recommender.py`, `fallback.py`, `logger.py` | 4 |
-| `src/monitoring/` | `kpis.py`, `replay_eval.py`, `dashboard.py` | 5 |
-| `src/pipeline/` | `retrain.py`, `promote.py`, `data_merge.py` | 5 |
-| `.github/workflows/` | `ci.yml`, `docker.yml` | 6 |
+| `src/frontend/` | `app.py`, `api_client.py`, `pages/*.py` | 5 |
+| `src/monitoring/` | `kpis.py`, `replay_eval.py`, `dashboard.py` | 6 |
+| `src/pipeline/` | `retrain.py`, `promote.py`, `data_merge.py` | 6 |
+| `.github/workflows/` | `ci.yml`, `docker.yml` | 7 |
+
+---
+
+## Running the Complete System
+
+After all phases are complete, run the system with:
+
+```bash
+# Terminal 1: Start the API
+python -m src.api.main
+# API available at http://localhost:8000
+
+# Terminal 2: Start the User Frontend
+streamlit run src/frontend/app.py --server.port 8502
+# Frontend available at http://localhost:8502
+
+# Terminal 3: Start the Monitoring Dashboard
+streamlit run src/monitoring/dashboard.py --server.port 8501
+# Dashboard available at http://localhost:8501
+```
+
+Or use Docker Compose:
+
+```bash
+docker-compose up
+```

@@ -44,6 +44,26 @@
 │                           └─────────────────┘                               │
 └─────────────────────────────────────────────────────────────────────────────┘
             │
+            │
+            ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            FRONTEND LAYER                                   │
+│  ┌─────────────────────────────────────────────────────────────────────┐    │
+│  │                      Streamlit Frontend                             │    │
+│  │  ┌───────────────┐  ┌───────────────┐  ┌───────────────────────┐    │    │
+│  │  │ Personalized  │  │ Find Similar  │  │   Popular Movies      │    │    │
+│  │  │Recommendations│  │    Movies     │  │     Browser           │    │    │
+│  │  └───────┬───────┘  └───────┬───────┘  └───────────┬───────────┘    │    │
+│  │          │                  │                      │                │    │
+│  │          └──────────────────┼──────────────────────┘                │    │
+│  │                             ▼                                       │    │
+│  │                    ┌─────────────────┐                              │    │
+│  │                    │   API Client    │                              │    │
+│  │                    │ (HTTP Requests) │                              │    │
+│  │                    └─────────────────┘                              │    │
+│  └─────────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────┘
+            │
             │ Async write
             ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -109,7 +129,18 @@
 | Fallback Handler | Cold-start logic | Popular items, seed-based |
 | Request Logger | Async write to SQLite | Non-blocking |
 
-### 2.4 Monitoring Layer
+### 2.4 Frontend Layer
+
+| Component | Responsibility | Notes |
+|-----------|---------------|-------|
+| Streamlit App | User-facing web interface | Port 8502 |
+| API Client | HTTP requests to FastAPI | Handles errors gracefully |
+| Personalized Page | Recommendations for known users | User ID input |
+| Similar Movies Page | Seed-based recommendations | Movie selection |
+| Popular Page | Browse trending movies | Genre filtering |
+| About Page | System status and info | API health check |
+
+### 2.5 Monitoring Layer
 
 | Component | Responsibility | Output |
 |-----------|---------------|--------|
@@ -117,7 +148,7 @@
 | Replay Evaluator | Offline evaluation on logged data | Precision, hit rate by model |
 | Dashboard | Visual health monitoring | Streamlit app |
 
-### 2.5 CI/CD Layer
+### 2.6 CI/CD Layer
 
 | Component | Responsibility | Trigger |
 |-----------|---------------|---------|
@@ -178,7 +209,25 @@ POST /recommend {user_id, k, exclude_seen}
 [Log request to SQLite]
 ```
 
-### 3.3 Retraining Flow
+### 3.3 Frontend Flow
+
+```
+User opens Streamlit app (port 8502)
+    │
+    ▼
+[Check API health] ──▶ Show status indicator
+    │
+    ├── Personalized Page
+    │   └── User enters ID ──▶ POST /recommend ──▶ Display movies
+    │
+    ├── Similar Movies Page
+    │   └── User selects movie ──▶ POST /similar ──▶ Display similar
+    │
+    └── Popular Page
+        └── User selects genre ──▶ GET /popular ──▶ Display popular
+```
+
+### 3.4 Retraining Flow
 
 ```
 [Scheduled trigger or manual invoke]
@@ -203,7 +252,7 @@ POST /recommend {user_id, k, exclude_seen}
     └── Not improved ──▶ [Keep current Production] ──▶ [Log decision]
 ```
 
-### 3.4 CI/CD Flow
+### 3.5 CI/CD Flow
 
 ```
 [Developer writes code]
@@ -338,15 +387,21 @@ movie-recommender/
 │   │   ├── __init__.py
 │   │   ├── train.py
 │   │   ├── evaluate.py
+│   │   ├── export.py
 │   │   └── mlflow_utils.py
 │   │
 │   ├── api/
 │   │   ├── __init__.py
 │   │   ├── main.py
 │   │   ├── schemas.py
+│   │   ├── model_loader.py
 │   │   ├── recommender.py
 │   │   ├── fallback.py
 │   │   └── logger.py
+│   │
+│   ├── frontend/
+│   │   ├── __init__.py
+│   │   └── app.py
 │   │
 │   ├── monitoring/
 │   │   ├── __init__.py
@@ -364,12 +419,15 @@ movie-recommender/
 │   ├── test_data.py
 │   ├── test_models.py
 │   ├── test_api.py
+│   ├── test_frontend.py
 │   └── test_evaluation.py
 │
 ├── scripts/
 │   ├── setup_data.sh
 │   ├── train_all.sh
-│   └── run_retrain.sh
+│   ├── run_retrain.sh
+│   ├── verify_api.py
+│   └── verify_export.py
 │
 ├── .pre-commit-config.yaml
 ├── Dockerfile
@@ -426,5 +484,6 @@ SQLite table `request_logs`:
 | **2. Data** | Download, preprocess, split, feature build | `src/data/*.py`, `src/features/build.py` | Train/val/test splits + features ready |
 | **3. Training** | Models (baseline + ALS), evaluation, MLflow tracking | `src/models/*.py`, `src/training/*.py` | Trained model registered in MLflow |
 | **4. Serving** | FastAPI endpoints, request logging | `src/api/*.py` | Working API returning recommendations |
-| **5. Ops** | Monitoring KPIs, replay evaluation, retraining pipeline, dashboard | `src/monitoring/*.py`, `src/pipeline/*.py` | Complete local system with observability |
-| **6. CI/CD** | Pre-commit hooks, GitHub Actions, tests | `.github/workflows/ci.yml`, `tests/*.py` | Automated quality gates on commit/push |
+| **5. Frontend** | User-facing Streamlit app | `src/frontend/*.py` | Interactive web interface |
+| **6. Monitoring** | KPIs, replay evaluation, dashboard, retraining pipeline | `src/monitoring/*.py`, `src/pipeline/*.py` | Complete observability and retraining |
+| **7. CI/CD** | Pre-commit hooks, GitHub Actions, tests | `.github/workflows/ci.yml`, `tests/*.py` | Automated quality gates on commit/push |
