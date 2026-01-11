@@ -37,6 +37,7 @@ repos:
         additional_dependencies:
           - pandas-stubs
           - types-PyYAML
+          - types-requests
         args: [--ignore-missing-imports]
         # Only run on src/, not tests/
         files: ^src/
