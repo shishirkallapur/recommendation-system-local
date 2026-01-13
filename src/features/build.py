@@ -78,10 +78,45 @@ def extract_year_from_title(title: str) -> Optional[int]:
         >>> extract_year_from_title("Some Movie")
         None
     """
+    if not isinstance(title, str):
+        return None
     match = re.search(r"\((\d{4})\)\s*$", title)
     if match:
         return int(match.group(1))
     return None
+
+
+def clean_title(title: str) -> str:
+    """Clean movie title by removing year, normalizing whitespace, and fixing article position.
+
+    Handles:
+    - Trailing year in parentheses: "Toy Story (1995)" -> "Toy Story"
+    - Article inversion: "English Patient, The" -> "The English Patient"
+    - Whitespace normalization
+
+    Args:
+        title: Raw movie title string (e.g., "English Patient, The (1996)")
+
+    Returns:
+        Cleaned title (e.g., "The English Patient")
+
+    """
+    if not isinstance(title, str):
+        return title
+
+    cleaned = re.sub(r"\s*\(\d{4}\)\s*$", "", title)
+
+    cleaned = cleaned.strip()
+
+    cleaned = re.sub(r"\s+", " ", cleaned)
+
+    article_match = re.match(r"^(.+),\s+(The|A|An)$", cleaned, re.IGNORECASE)
+    if article_match:
+        main_title = article_match.group(1)
+        article = article_match.group(2)
+        cleaned = f"{article} {main_title}"
+
+    return cleaned
 
 
 def load_raw_movies() -> pd.DataFrame:
@@ -139,6 +174,10 @@ def build_item_features(save: bool = True) -> pd.DataFrame:
 
     # Extract year from title
     item_features["year"] = item_features["title"].apply(extract_year_from_title)
+
+    # Clean titles (normalize whitespace, formatting)
+    item_features["title"] = item_features["title"].apply(clean_title)
+    logger.info("Cleaned and normalized movie titles")
 
     # Reorder columns: item_id, title, year, then genres
     column_order = ["item_id", "title", "year"] + GENRE_NAMES
