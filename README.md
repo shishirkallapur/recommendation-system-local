@@ -264,7 +264,7 @@ See [FUTURE_IMPLEMENTATION.md](future_implementation.md) for detailed v2 roadmap
 |----------|-------------|
 | [architecture.md](architecture.md) | System design, data flows, API spec |
 | [implementation_plan.md](implementation_plan.md) | Phase-by-phase task breakdown |
-| [FUTURE_IMPLEMENTATIONS.md](FUTURE_IMPLEMENTATIONS.md) | v2 roadmap and planned features |
+| [FUTURE_IMPLEMENTATIONS.md](future_implementation.md) | v2 roadmap and planned features |
 
 ## 🙏 Acknowledgments
 
