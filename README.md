@@ -249,7 +249,7 @@ Configuration files in `configs/`:
 
 ## 🔮 Future Plans (v2)
 
-See [FUTURE_IMPLEMENTATIONS.md](FUTURE_IMPLEMENTATIONS.md) for detailed v2 roadmap:
+See [FUTURE_IMPLEMENTATION.md](future_implementation.md) for detailed v2 roadmap:
 
 - User authentication and registration
 - Real-time rating system
